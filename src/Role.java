@@ -9,15 +9,15 @@ public class Role implements Serializable{
     private double gamesWon;
     private double gamesPlayed;
     private boolean good;
-    private PlayerRole role;
+    private Player player;
+    private RoleType role;
 
-    public enum PlayerRole {MERLIN, PERCIVAL, KNIGHT, ASSASSIN, MORGANA, MORDRED, OBERON}
-
-    public Role(String roleName){
+    public Role(String roleName, Player player){
         this.roleName = roleName;
-        this.role = parsePlayerRole(roleName);
+        this.role = RoleType.parsePlayerRole(roleName);
         gamesWon = 0;
         gamesPlayed = 0;
+        this.player = player;
     }
 
     public boolean isGood(){
@@ -29,14 +29,17 @@ public class Role implements Serializable{
             default:
                 return false;
         }
-        /*switch (this.roleName.toLowerCase()){
-            case "merlin":
-            case "percival":
-            case "knight":
-                return true;
-            default:
-                return false;
-        }*/
+    }
+
+    private double roleRate(){
+        try{
+            if(player.getGamesTotal() == 0){
+                return 0;
+            }
+            return (gamesPlayed/player.getGamesTotal())*100.0;
+        } catch (ArithmeticException e){
+            return 0;
+        }
     }
 
     public void addGame(){
@@ -47,7 +50,7 @@ public class Role implements Serializable{
         this.gamesWon++;
     }
 
-    public double winRate(){
+    private double winRate(){
         try{
             if(gamesPlayed == 0){
                 return 0;
@@ -74,39 +77,20 @@ public class Role implements Serializable{
         this.gamesPlayed = gamesPlayed;
     }
 
-    public static PlayerRole parsePlayerRole(String roleName){
-        switch (roleName.toLowerCase().trim()){
-            case "merlin":
-            case "m":
-                return PlayerRole.MERLIN;
-            case "percival":
-            case "p":
-                return PlayerRole.PERCIVAL;
-            case "knight":
-            case "k":
-                return PlayerRole.KNIGHT;
-            case "assassin":
-            case "a":
-                return PlayerRole.ASSASSIN;
-            case "morgana":
-            case "mg":
-                return PlayerRole.MORGANA;
-            case "mordred":
-            case "md":
-                return PlayerRole.MORDRED;
-            case "oberon":
-            case "o":
-                return PlayerRole.OBERON;
-            default:
-                return null;
-        }
-    }
-
     public String getXMLName(){
         return this.roleName.toLowerCase().trim();
     }
 
     public String toString(){
-        return String.format("%sWinrate: %03.0f%%     Total Games: %02.0f     Games Won: %02.0f", roleName, winRate(), gamesPlayed, gamesWon);
+        String newLine = System.lineSeparator();
+        return String.format(
+                //"%sWinrate: %03.0f%%     Total Games: %02.0f     Games Won: %02.0f", roleName.toUpperCase(), winRate(), gamesPlayed, gamesWon);
+                "%s" + newLine +
+                " | - Played in %.0f%% of all games" + newLine +
+                " | - Winrate........%.0f%%" + newLine +
+                " | - Games won......%.0f wins" + newLine +
+                " | - Total games....%.0f games"
+                , roleName, roleRate(), winRate(), gamesWon, gamesPlayed
+        );
     }
 }

@@ -26,16 +26,16 @@ public class Player implements Serializable{
         this.timesBad = 0;
 
         this.rolesTable = new LinkedHashMap<>();
-        rolesTable.put("merlin",    new Role("Merlin    "));
-        rolesTable.put("percival",  new Role("Percival  "));
-        rolesTable.put("knight",    new Role("Knight    "));
-        rolesTable.put("assassin",  new Role("Assassin  "));
-        rolesTable.put("morgana",   new Role("Morgana   "));
-        rolesTable.put("mordred",   new Role("Mordred   "));
-        rolesTable.put("oberon",    new Role("Oberon    "));
+        rolesTable.put("merlin",    new Role("Merlin",this));
+        rolesTable.put("percival",  new Role("Percival",this));
+        rolesTable.put("knight",    new Role("Knight",this));
+        rolesTable.put("assassin",  new Role("Assassin",this));
+        rolesTable.put("morgana",   new Role("Morgana",this));
+        rolesTable.put("mordred",   new Role("Mordred",this));
+        rolesTable.put("oberon",    new Role("Oberon",this));
     }
 
-    public double winrate(){
+    private double winrate(){
         try{
             if(gamesTotal == 0){
                 return 0;
@@ -46,7 +46,7 @@ public class Player implements Serializable{
         }
     }
 
-    public double winrateGood(){
+    private double winrateGood(){
         try{
             if(gamesTotal == 0){
                 return 0;
@@ -58,7 +58,7 @@ public class Player implements Serializable{
         }
     }
 
-    public double winrateBad(){
+    private double winrateBad(){
         try{
             if(gamesTotal == 0){
                 return 0;
@@ -69,7 +69,7 @@ public class Player implements Serializable{
         }
     }
 
-    public void winGame(Role playerRole){
+    private void winGame(Role playerRole){
         playerRole.winGame();
         this.gamesWon+=1;
         if(playerRole.isGood()){
@@ -79,7 +79,7 @@ public class Player implements Serializable{
         }
     }
 
-    public void addGame(Role playerRole, Game.GameResult gameResult){
+    public void addGame(Role playerRole, GameResult gameResult){
         this.gamesTotal+=1;
         playerRole.addGame();
 
@@ -177,39 +177,27 @@ public class Player implements Serializable{
     public String toString(){
         String newLine = System.lineSeparator();
         String s = String.format(
-            "" + playerName+ "" + newLine +
-            " | Winrate.............%.2f%%" + newLine +
-            " | Winrate (good)......%.2f%%" + newLine +
-            " | Winrate (bad).......%.2f%%" + newLine +
-            " | Games Won...........%.0f wins" + newLine +
-            " | Games Won (good)....%.0f wins" + newLine +
-            " | Games Won (bad).....%.0f wins" + newLine +
-            " | Total games.........%.0f games" + newLine +
-            " | Total games (good)..%.0f games" + newLine +
-            " | Total games (bad)...%.0f games" + newLine +
-            " | " + newLine
-            , winrate(), winrateGood(), winrateBad(), gamesWon, gamesWonGood, gamesWonBad, gamesTotal, timesGood, timesBad
-        );
-        /*String s  = playerName + newLine + "--------------------------------------" + newLine;
-        s+=String.format("Winrate: %.2f%%"
-                //+newLine
-                        +" | Total wins: %.0f"
-                //+newLine
-                        +" | Total games: %.0f"
-                +newLine+"Winrate as Good: %.0f%% "//(%.0f/%.0f)"
-                +newLine+
-                "Wins as Good: %.0f"
-                //+newLine+
-                +" | Times Good: %.0f"
-                +newLine+"Winrate as Bad %.0f%% "//(%.0f/%.0f)"
-                +newLine+
-                "Wins as Bad: %.0f"
-                //+newLine+
-                +" | Times Bad %.0f",
-                winrate(), gamesWon, gamesTotal, winrateGood(), gamesWonGood, timesGood, winrateBad(), gamesWonBad, timesBad)+newLine;*/
+            " " + playerName.toUpperCase()+ "" + newLine +
+            " | Winrate...............%.2f%%" + newLine +
+            " | - Winrate (good)......%.2f%%" + newLine +
+            " | - Winrate (bad).......%.2f%%" + newLine +
+            " | Games Won.............%.0f wins" + newLine +
+            " | - Games Won (good)....%.0f wins" + newLine +
+            " | - Games Won (bad).....%.0f wins" + newLine +
+            " | Total games...........%.0f games" + newLine +
+            " | - Total games (good)..%.0f games" + newLine +
+            " | - Total games (bad)...%.0f games" + newLine +
+            "  " + newLine
+            , winrate(), winrateGood(), winrateBad(), gamesWon, gamesWonGood, gamesWonBad, gamesTotal, timesGood, timesBad) +
+            //" | :"+ newLine;
+            "";
+
         for(Role r : rolesTable.values()){
-            s+=" | "+r.toString()+newLine;
+            s+=" | "+r.toString()+newLine+newLine;
         }
+
+       //s+= "  ------------------------------------------"; //----------------------";
+
         return s;
     }
 }
