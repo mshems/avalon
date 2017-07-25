@@ -1,3 +1,9 @@
+*.avalon
+*.player
+*.cmd
+*.idea
+data
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db

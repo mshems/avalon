@@ -7,7 +7,7 @@ public class PlayerRolePair{
 
     public PlayerRolePair(Player player, String roleName){
         this.player = player;
-        this. roleName = roleName;
+        this.roleName = roleName;
     }
 
     public Player getPlayer(){
