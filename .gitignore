@@ -3,6 +3,7 @@
 *.cmd
 *.idea
 data
+out
 
 # Windows image file caches
 Thumbs.db
