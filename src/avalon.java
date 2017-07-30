@@ -24,6 +24,10 @@ public class avalon{
         AvalonXMLReader.readPlayerStats();
         AvalonXMLReader.readGameStats();
 
+        AvalonWindow aw = new AvalonWindow();
+        aw.setVisible(true);
+        //aw.pack();
+
         if (args.length > 0){
             switch (args[0]){
                 case "new":

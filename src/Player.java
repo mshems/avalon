@@ -8,13 +8,13 @@ import java.util.LinkedHashMap;
 public class Player implements Serializable{
     private static final long serialVersionUID = avalon.VERSION;
     private String playerName;
-    private double gamesWon;
-    private double gamesWonGood;
-    private double gamesWonBad;
-    private double gamesTotal;
-    private double timesGood;
-    private double timesBad;
-    private LinkedHashMap<String, Role> rolesTable;
+    double gamesWon;
+    double gamesWonGood;
+    double gamesWonBad;
+    double gamesTotal;
+    double timesGood;
+    double timesBad;
+    LinkedHashMap<String, Role> rolesTable;
 
     public Player(String playerName){
         this.playerName = playerName;
@@ -35,7 +35,7 @@ public class Player implements Serializable{
         rolesTable.put("oberon",    new Role("Oberon",this));
     }
 
-    private double winrate(){
+    double winrate(){
         try{
             if(gamesTotal == 0){
                 return 0;
@@ -46,7 +46,7 @@ public class Player implements Serializable{
         }
     }
 
-    private double winrateGood(){
+    double winrateGood(){
         try{
             if(gamesTotal == 0){
                 return 0;
@@ -58,7 +58,7 @@ public class Player implements Serializable{
         }
     }
 
-    private double winrateBad(){
+    double winrateBad(){
         try{
             if(gamesTotal == 0){
                 return 0;
@@ -69,7 +69,7 @@ public class Player implements Serializable{
         }
     }
 
-    private void winGame(Role playerRole){
+    void winGame(Role playerRole){
         playerRole.winGame();
         this.gamesWon+=1;
         if(playerRole.isGood()){
