@@ -17,6 +17,10 @@ public class avalon{
     static LinkedHashMap<String, Player> playerList;
     private static Scanner scanner;
 
+    public static Player getPlayer(String key){
+        return playerList.get(key);
+    }
+
     public static void main(String[] args){
         scanner = new Scanner(System.in);
 

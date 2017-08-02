@@ -9,79 +9,98 @@ import java.util.HashMap;
 public class AvalonWindow extends JFrame{
     private static final int DEFAULT_WIDTH = 800;
     private static final int DEFAULT_HEIGHT = 500;
-    private ArrayList<PlayerWindow> childWindows;
+    private ArrayList<PlayerView> childWindows;
     private JScrollPane rightPanel;
-    private JPanel playerListPanel;
+    private JPanel buttonPanel;
+    private JPanel centerPanel;
     private JPanel topPanel;
-    JPanel centerPanel;
     private JPanel leftPanel;
     private JPanel bottomPanel;
-    private JPanel contents;
-    HashMap<String, PlayerButton> buttonMap;
-    String activePlayerKey;
+    private HashMap<String, PlayerButton> buttonMap;
 
     public AvalonWindow(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Avalon Stats");
         this.setSize(DEFAULT_WIDTH,DEFAULT_HEIGHT);
-
-        this.contents = new JPanel();
-        this.contents.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
 
         centerPanel = new JPanel();
-        centerPanel.setLayout(new FlowLayout());
-        centerPanel.setBackground(Color.WHITE);
-        ////////////////
-        playerListPanel = new JPanel();
-        //playerListPanel.setBackground(Color.BLUE);
+            centerPanel.setBackground(Color.YELLOW);
+            centerPanel.setLayout(new GridLayout());
 
-        BoxLayout layout = new BoxLayout(playerListPanel, BoxLayout.PAGE_AXIS);
-        playerListPanel.setLayout(layout);
-        //JLabel playersLabel = new JLabel("Players:");
-        //playersLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        //playerListPanel.add(playersLabel);
+        initRightPanel();
 
-        this.buttonMap = new HashMap<>();
-        for(String key:avalon.playerList.keySet()){
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new BorderLayout());
-            //JButton playerButton = new JButton(key);
-            PlayerButton playerButton = new PlayerButton(avalon.playerList.get(key).getPlayerName(), key,  this);
-            playerButton.setBorderPainted(false);
-            playerButton.setFocusPainted(false);
-            playerButton.setBackground(Color.white);
-            //playerButton.addActionListener(new PlayerButtonListener(avalon.playerList.get(key), this));
-            buttonMap.put(key,playerButton);
-            buttonPanel.setMaximumSize(new Dimension(getWidth(), 25));
-            buttonPanel.add(playerButton, BorderLayout.CENTER);
-            playerListPanel.add(buttonPanel);
-        }
-        rightPanel = new JScrollPane(playerListPanel);
-        rightPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        rightPanel.setViewportView(playerListPanel);
-        rightPanel.setBorder(BorderFactory.createEmptyBorder());
-        ////////////////
+
+
         topPanel = new JPanel();
-        //topPanel.setBackground(Color.RED);
-        ////////////////
+            topPanel.add(new JLabel("Top Panel"));
+            topPanel.setBackground(Color.RED);
+
         leftPanel = new JPanel();
-        //leftPanel.setBackground(Color.WHITE);
-        ////////////////
+            leftPanel.add(new JLabel("Left Panel"));
+            leftPanel.setBackground(Color.GREEN);
+
         bottomPanel = new JPanel();
-        //bottomPanel.setBackground(Color.CYAN);
-        ////////////////
-        this.contents.add(topPanel, BorderLayout.NORTH);
-        this.contents.add(centerPanel, BorderLayout.CENTER);
-        this.contents.add(rightPanel, BorderLayout.EAST);
-        this.contents.add(leftPanel, BorderLayout.WEST);
-        this.contents.add(bottomPanel, BorderLayout.SOUTH);
+            bottomPanel.add(new JLabel("Bottom Panel"));
+            bottomPanel.setBackground(Color.CYAN);
 
-        /*for(String s:names){
-            this.playerList.add(new PlayerWindow(avalon.playerList.get(s), this));
-        }*/
+        this.add(centerPanel, BorderLayout.CENTER);
+        this.add(topPanel, BorderLayout.NORTH);
 
-        this.add(contents);
-        //this.pack();
+        this.add(leftPanel, BorderLayout.WEST);
+        this.add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    private void initRightPanel(){
+        rightPanel = new JScrollPane(initButtonPanel());
+        rightPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        rightPanel.setBorder(BorderFactory.createEmptyBorder());
+        this.add(rightPanel, BorderLayout.EAST);
+
+    }
+
+    private JPanel initButtonPanel(){
+        buttonPanel = new JPanel();
+        buttonPanel.setBackground(Color.BLUE);
+        BoxLayout layout = new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS);
+        buttonPanel.setLayout(layout);
+        addPlayerButtons();
+        buttonPanel.add(Box.createVerticalGlue());
+        AvalonButton ab = new AvalonButton("All");
+        ab.addActionListener(new StatsButtonListener(this));
+        JPanel gameButtonPanel = new JPanel();
+        gameButtonPanel.setLayout(new BorderLayout());
+        gameButtonPanel.setMaximumSize(new Dimension(getWidth(), 25));
+        gameButtonPanel.add(ab,BorderLayout.CENTER);
+        buttonPanel.add(gameButtonPanel);
+        return buttonPanel;
+    }
+
+    private void addPlayerButtons(){
+        this.buttonMap = new HashMap<>();
+        for (String key : avalon.playerList.keySet()){
+            PlayerButton playerButton = new PlayerButton(avalon.getPlayer(key).getPlayerName(), key, this);
+            buttonMap.put(key, playerButton);
+            JPanel playerButtonPanel = new JPanel();
+                playerButtonPanel.setLayout(new BorderLayout());
+                playerButtonPanel.setMaximumSize(new Dimension(getWidth(), 25));
+                playerButtonPanel.add(playerButton, BorderLayout.CENTER);
+            buttonPanel.add(playerButtonPanel);
+        }
+    }
+
+    public void displayPlayer(String playerKey){
+        centerPanel.removeAll();
+        centerPanel.add(new PlayerView(avalon.getPlayer(playerKey)));
+        centerPanel.validate();
+        centerPanel.repaint();
+    }
+
+    public void displayGameStats(){
+        centerPanel.removeAll();
+        centerPanel.add(new JLabel("STATS"));
+        centerPanel.validate();
+        centerPanel.repaint();
     }
 
     public void repaint(){

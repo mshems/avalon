@@ -1,11 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Matt on 7/29/2017.
  */
-public class PlayerButton extends JButton{
-
+public class PlayerButton extends AvalonButton{
 
     public PlayerButton(String label, String playerKey, AvalonWindow parentWindow){
         super(label);
@@ -18,5 +18,10 @@ public class PlayerButton extends JButton{
 
     public void deselect(){
         this.setBackground(Color.WHITE);
+    }
+
+    public void setActionListener(ActionListener a){
+        //this.addActionListener(a);
+        this.actionListener = a;
     }
 }
